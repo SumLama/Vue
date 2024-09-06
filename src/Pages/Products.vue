@@ -20,7 +20,7 @@ onMounted(()=>{
        <div  class="grid grid-cols-5  m-10 justify-items-center gap-5 font-serif text-lg cursor-pointer ">
             <div v-for="product in products" :key="product.id">
               <ul class="p=6">
-                <li><img :src="product.image" :alt="product.title" class="p-6 h-80 w-64 border-2 object-contain hover:border-orange-100 rounded-md hover:scale-110" ></li>
+                <li><img :src="product.image" :alt="product.title" class="p-6 h-72 w-64 border-2 object-contain hover:border-orange-100 rounded-md hover:scale-110" ></li>
                 <li class="my-3">
                     <p>{{ product.title }}</p>
                    </li>

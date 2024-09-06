@@ -6,8 +6,8 @@ import ProductDetails from './Pages/ProductDetails.vue';
 <template>
   
 
-<!-- <Products/> -->
- <ProductDetails/>
+ <Products/> 
+ <!-- <ProductDetails/> -->
 </template>
 
 <style scoped>
