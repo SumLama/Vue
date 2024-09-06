@@ -1,6 +1,6 @@
 <script setup>
-import Products from './components/Products.vue';
-import ProductDetails from './components/ProductDetails.vue';
+import Products from './Pages/Products.vue';
+import ProductDetails from './Pages/ProductDetails.vue';
 </script>
 
 <template>
