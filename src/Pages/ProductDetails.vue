@@ -1,12 +1,15 @@
 <script setup>
-import { ref,onMounted ,computed} from 'vue';
+import { ref,onMounted ,computed, onBeforeMount} from 'vue';
 import { useRoute } from 'vue-router';
 import axios from 'axios';
+import { cartStore} from '@/Stores/cartStores';
+
 const route = useRoute();
 const color = ref('blue');
-const quantity = ref(0);
+const quantity = ref(1);
 const product=ref();
-const loading = ref(true);
+const loading = ref(false);
+
 const id = computed(() => route.params.id);
 const fetchProductDetails = async () => {
     loading.value =true
@@ -36,22 +39,40 @@ const DecreaseQty= ()=>{
         quantity.value--;
     }
 }
+
+const cartstore = cartStore();
+const addToCart = ()=>{
+    if(product.value){
+        const item=({
+        id:product.value.id,
+        image:product.value.image,
+        title:product.value.title,
+        price:product.value.price,
+        quantity :quantity.value
+
+    })
+   
+    cartstore.addItem(item);
+    alert("Added to cart");
+    }
+}
+
 </script>
 <template>
-<div class="container">
+
     <div v-if="loading" class="text-center text-2xl ">
         <h1>Loading.............</h1>
     </div>
-    <div v-else-if="product" class="flex flex-row m-5 py-7">
+    <div v-else-if="product" class="flex-row md:flex mx-5 my-10 py-7">
         <!-- <div class="w-1/3 flex justify-center items-center ">
             <img :src="product.image" :alt="product.title" class="h-2/3 border-2 p-7"/>
         </div>   
                                                         -->
-      <div class="w-1/3 grid grid-cols-1 justify-items-center ">
+      <div class="grid grid-cols-1 w-full md:w-1/3  h-1/2  md:justify-items-center ">
         <div >
-            <img :src="product.image" :alt="product.title" class="h-340 w-72 border-2 p-7 my-2"/>
+            <img :src="product.image" :alt="product.title" class="h-[330px] w-72 border-2 md:my-3 p-7"/>
         </div>
-        <div class=" flex flex-row flex-nowrap gap-2 h-20 w-72">
+        <div class=" flex flex-row gap-2 h-20 w-72 my-4 md:my-0 ">
             <img :src="product.image" :alt="product.title" class="h-auto w-1/4 border-2 p-2"/>
             <img :src="product.image" :alt="product.title" class="h-auto w-1/4 border-2 p-2"/>
             <img :src="product.image" :alt="product.title" class="h-auto w-1/4  border-2 p-2"/>
@@ -61,7 +82,7 @@ const DecreaseQty= ()=>{
         </div> 
             
         </div> 
-        <div class="w-1/2">
+        <div class="w-full md:w-1/2 md:mx-10 lg:mx-0">
             <ul>
                 <li>
                     <h1 class="text-2xl">{{ product.title }}</h1>
@@ -91,13 +112,13 @@ const DecreaseQty= ()=>{
                     <div class="text-xl" >
                         <label>Quantity:</label><br>
                         <button class="font-bold" @click="DecreaseQty">-</button>
-                    <input type="text" placeholder="0" :value="quantity" class="h-10 w-10 m-5 text-center border-2 " />
+                    <input type="text" placeholder="1" v-model="quantity" class="h-10 w-10 m-5 text-center border-2 " />
                     <button class="font-bold" @click="IncreaseQty">+</button>   
                     </div>
                     
                 </li>
                 <li class="my-3">
-                    <button class="bg-gray-800 text-white p-2 rounded-md w-2/4 text-xl">Add to cart</button>
+                    <button class="bg-gray-800 text-white p-2 rounded-md w-2/4 text-xl" @click="addToCart">Add to cart</button>
                 </li>
                 <li class="text-lg border-t mt-2 pt-2">
                     <label>Description</label>
@@ -115,10 +136,6 @@ const DecreaseQty= ()=>{
     </div>
     
 
-  
-
-
-</div>
 </template>
 <style scoped>
 
