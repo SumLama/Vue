@@ -58,7 +58,7 @@ const addToCart = ()=>{
 }
 
 </script>
-<template>
+<template>r
 
     <div v-if="loading" class="text-center text-2xl ">
         <h1>Loading.............</h1>
