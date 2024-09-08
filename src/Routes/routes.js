@@ -4,8 +4,8 @@ import ProductDetails from "@/Pages/ProductDetails.vue";
 import Products from "@/Pages/Products.vue";
 import CartLisiting from "@/Pages/CartLisiting.vue";
 const routes =[
-    {path:'/',component:Home},
-    { path:'/products',component:Products},
+  
+    { path:'/',component:Products},
     { path: '/products/:id', name: 'ProductDetails', component: ProductDetails, props: true },
     { path:'/cartlist',component:CartLisiting},
    
