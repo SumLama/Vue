@@ -1,20 +1,34 @@
 <script setup>
-import { ref } from 'vue';
-const color = ref('blue')
-const quantity = ref(0)
-const product= {
-    "id": 1,
-    "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-    "price": 109.95,
-    "description": "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
-    "category": "men's clothing",
-    "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-  
+import { ref,onMounted ,computed} from 'vue';
+import { useRoute } from 'vue-router';
+import axios from 'axios';
+const route = useRoute();
+const color = ref('blue');
+const quantity = ref(0);
+const product=ref();
+const loading = ref(true);
+const id = computed(() => route.params.id);
+const fetchProductDetails = async () => {
+    loading.value =true
+  try {
+    
+    const response = await axios.get(`https://fakestoreapi.com/products/${id.value}`);
+    product.value = response.data;
+  } catch (error) {
+    console.log('Error fetching product details:', error);
   }
+  finally{
+    loading.value = false;
+  }
+};
 
-  const IncreaseQty= ()=>{
+onMounted(() => {  
+  fetchProductDetails();
+});
+
+const IncreaseQty= ()=>{
   
-        quantity.value++;
+    quantity.value++;
     
 }
 const DecreaseQty= ()=>{
@@ -25,7 +39,10 @@ const DecreaseQty= ()=>{
 </script>
 <template>
 <div class="container">
-    <div class="flex flex-row m-5 py-7">
+    <div v-if="loading" class="text-center text-2xl ">
+        <h1>Loading.............</h1>
+    </div>
+    <div v-else-if="product" class="flex flex-row m-5 py-7">
         <!-- <div class="w-1/3 flex justify-center items-center ">
             <img :src="product.image" :alt="product.title" class="h-2/3 border-2 p-7"/>
         </div>   
@@ -60,7 +77,7 @@ const DecreaseQty= ()=>{
                 <div>
                     <label>Color:</label><br>
                     <input type="radio" id="blue" v-model="color" value="blue" />
-                    <lable class="mx-3">Blue</lable>
+                    <label class="mx-3">Blue</label>
 
                     <input type="radio" id="red" v-model="color" value="red"/>
                     <label class="mx-3">Red</label>
@@ -70,7 +87,7 @@ const DecreaseQty= ()=>{
                 </div>
                 
                 </li> 
-                <li  class="my-5">
+                <li  class="my-2">
                     <div class="text-xl" >
                         <label>Quantity:</label><br>
                         <button class="font-bold" @click="DecreaseQty">-</button>
@@ -79,7 +96,10 @@ const DecreaseQty= ()=>{
                     </div>
                     
                 </li>
-                <li class="text-lg border-t pt-2">
+                <li class="my-3">
+                    <button class="bg-gray-800 text-white p-2 rounded-md w-2/4 text-xl">Add to cart</button>
+                </li>
+                <li class="text-lg border-t mt-2 pt-2">
                     <label>Description</label>
                   <h1>{{ product.description }}</h1>  
                 </li>
@@ -93,6 +113,7 @@ const DecreaseQty= ()=>{
             
         </div>
     </div>
+    
 
   
 
