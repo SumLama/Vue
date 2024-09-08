@@ -1,58 +1,43 @@
 <script setup>
 import { ref } from 'vue';
-const qty = ref(0)
- const cartItem = [{
-
- "id": 1,
-    "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-    "price": 109.95,
-    "description": "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
-    "category": "men's clothing",
-    "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-  
-  },{
-    "id": 2,
-    "title": "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-    "price": 109.95,
-    "description": "Your perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
-    "category": "men's clothing",
-    "image": "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-  
-  }]
+import { cartStore } from '@/Stores/cartStores';
+const cart= cartStore()
+const cartItem = cart.items;
+const totalprice = cart.totalPrice;
+console.log(totalprice)
+                    
 </script>
 <template>
-    <div class="container">
-        <div>
-        <table >
-            <thead>
-                <tr class="flex flex-row justify-around  w-screen px-5 my-4">
-                    
-                        <th>Index</th>
-                    <th>Products</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                   
-                  
-                </tr>
-            </thead> 
-            <tbody>
-               <tr v-for="(cart, index) in cartItem" class=" flex flex-row justify-around w-screen px-5 my-3 py-3 hover:bg-gray-100">
+    <div v-if="cartItem.length > 0" class="w-full flex justify-center">
+      <table class="w-4/5  bg-white border border-gray-200">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="py-2 px-4 border-b">Index</th>
+            <th class="py-2 px-4 border-b">Products</th>
+            <th class="py-2 px-4 border-b">Quantity</th>
+            <th class="py-2 px-4 border-b">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in cartItem" :key="item.id" class="hover:bg-gray-100">
+            <td class="py-2 px-4 border-b text-center">{{ index + 1 }}</td>
+            <td class="py-2 px-4 border-b flex items-center justify-center">
+            <img :src="item.image" :alt="item.title" class="w-24 h-24 object-contain" />
+          </td>
+            <td class="py-2 px-4 border-b text-center">{{ item.quantity }}</td>
+            <td class="py-2 px-4 border-b text-center">$ {{ item.price * item.quantity }}</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td colspan="4" class="py-2 px-4 pr-6 border-t text-center font-bold">Total: ${{ totalprice }}</td>
             
-                    <td>{{ index+1 }}</td>
-                    <td><img :src="cart.image" :alt="cart.title " height="100px" width="100px"/></td>
-                    
-                    <td>{{ qty}}</td>
-                    
-                    <td>$ {{ cart.price }}</td>
-                    
-                   
-                </tr> 
-            </tbody>
-        </table>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    </div>
-
-</template>
+  </template>
 
 <style scoped>
 
