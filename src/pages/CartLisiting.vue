@@ -1,10 +1,28 @@
 <script setup>
-
+import QuantityButton from '@/components/QuantityButton.vue';
 import { cartStore } from '@/stores/cartStores';
+import { ref,watch } from 'vue';
 const cart= cartStore()
 const cartItem = cart.items;
-const totalprice = cart.totalPrice;
-console.log(totalprice)       
+
+const totalprice = ref(cart.totalPrice);
+
+const CalculatePrice = () =>{
+totalprice.value = cartItem.reduce((total,item)=> total+ item.price*item.quantity,0)
+}
+watch(cartItem,(newItem,oldItem)=>{
+  CalculatePrice()
+},{deep:true})
+
+const IncreaseQty= (item)=>{
+item.quantity++
+  
+}
+const DecreaseQty= (item)=>{
+  if(item.quantity>0){
+    item.quantity--;
+  }
+}
 </script>
 <template>
     <div v-if="cartItem.length > 0" class="w-full flex justify-center my-8">
@@ -21,16 +39,20 @@ console.log(totalprice)
           <tr v-for="(item, index) in cartItem" :key="item.id" class="hover:bg-gray-100">
             <td class="py-2 px-4 border-b text-center">{{ index + 1 }}</td>
             <td class="py-2 px-4 border-b flex items-center justify-center">
-            <img :src="item.image" :alt="item.title" class="w-24 h-24 object-contain" />
-          </td>
-            <td class="py-2 px-4 border-b text-center"><input  type="text" v-model="item.quantity" height=""></td>
-            <td class="py-2 px-4 border-b text-center">$ {{ item.price * item.quantity }}</td>
+              <img :src="item.image" :alt="item.title" class="w-24 h-24 object-contain" />
+            </td>
+            <td class="py-2 px-4 border-b text-center">
+              <button class="font-bold" @click="DecreaseQty(item)">-</button>
+              <input type="text" placeholder="1" v-model.number="item.quantity" class="h-8 w-9 m-1 text-center border-2 r" />
+              <button class="font-bold" @click="IncreaseQty(item)">+</button>  
+            </td>
+            <td class="py-2 px-4 border-b text-center">$ {{ (item.price * item.quantity).toFixed(2) }}</td>
           </tr>
           <tr>
             <td></td>
             <td></td>
             <td></td>
-            <td colspan="4" class="py-2 px-4 pr-6 border-t text-center font-bold">Total: ${{ totalprice }}</td>         
+            <td colspan="4" class="py-2 px-4 pr-6 border-t text-center font-bold">Total: ${{ totalprice.toFixed(2)}}</td>         
           </tr>
         </tbody>
       </table>
