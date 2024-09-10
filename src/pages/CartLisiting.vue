@@ -1,63 +1,72 @@
 <script setup>
-import QuantityButton from '@/components/QuantityButton.vue';
 import { cartStore } from '@/stores/cartStores';
-import { ref,watch } from 'vue';
+import { onMounted, ref,watch } from 'vue';
 const cart= cartStore()
-const cartItem = cart.items;
-
-const totalprice = ref(cart.totalPrice);
+const totalprice = ref(cart.totalPrice)
 
 const CalculatePrice = () =>{
-totalprice.value = cartItem.reduce((total,item)=> total+ item.price*item.quantity,0)
+ totalprice.value =  Object.values(cart.items).reduce((total,item)=> total+ item.price*item.quantity,0)
 }
-watch(cartItem,(newItem,oldItem)=>{
+
+watch(cart.items,(newItem,oldItem)=>{
   CalculatePrice()
 },{deep:true})
 
 const IncreaseQty= (item)=>{
-item.quantity++
-  
+  item.quantity++ 
 }
 const DecreaseQty= (item)=>{
   if(item.quantity>0){
     item.quantity--;
   }
 }
+
+const handleCheckout = ()=>{
+  alert("Proceeding to checkout")
+}
 </script>
 <template>
-    <div v-if="cartItem.length > 0" class="w-full flex justify-center my-8">
-      <table class="w-4/5  bg-white border border-gray-200">
-        <thead>
-          <tr class="bg-gray-200">
-            <th class="py-2 px-4 border-b">Index</th>
-            <th class="py-2 px-4 border-b">Products</th>
-            <th class="py-2 px-4 border-b">Quantity</th>
-            <th class="py-2 px-4 border-b">Price</th>
+  <div v-if="cart.itemCount > 0" class="flex justify-center my-8 ">
+    <table class="sm:w-4/5 bg-white border-t mx-4 border-gray-200">
+      <thead>
+        <tr class="bg-gray-200 border-b">
+          <th class="py-2 px-4">SNo</th>
+          <th class="py-2 px-4">Products</th>
+          <th class="py-2 px-4">Quantity</th>
+          <th class="py-2 px-4">Price</th>
+          <th class="py-2 px-4">Action</th> 
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item,key,index) in cart.items"  class="hover:bg-gray-100 border-2">
+          <td class="py-2 px-4 text-center">{{ index+1 }}</td>
+          <td class="py-2 px-4 flex items-center justify-center">
+            <img :src="item.image" :alt="item.title" class=" h-14 sm:h-16 md:h-24 object-contain" />
+          </td>
+          <td class="py-2 px-4  text-center">
+            <button class="font-bold" @click="DecreaseQty(item)">-</button>
+            <input type="text" placeholder="1" v-model.number="item.quantity" class="h-8 w-9 m-1 text-center border-2 r" />
+            <button class="font-bold" @click="IncreaseQty(item)">+</button>  
+          </td>
+          <td class="py-2 px-4 text-center">$ {{ (item.price * item.quantity).toFixed(2) }}</td>
+          <td class=" text-center " @click="cart.removeItem(key)"><i class="fa fa-trash"></i></td>
+        </tr>
+        <tr>
+          <td colspan="4">
+            <div class="text-right py-5 px-4  font-bold">Total: $ {{ totalprice.toFixed(2)}}</div> 
+          </td>
           </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in cartItem" :key="item.id" class="hover:bg-gray-100">
-            <td class="py-2 px-4 border-b text-center">{{ index + 1 }}</td>
-            <td class="py-2 px-4 border-b flex items-center justify-center">
-              <img :src="item.image" :alt="item.title" class="w-24 h-24 object-contain" />
-            </td>
-            <td class="py-2 px-4 border-b text-center">
-              <button class="font-bold" @click="DecreaseQty(item)">-</button>
-              <input type="text" placeholder="1" v-model.number="item.quantity" class="h-8 w-9 m-1 text-center border-2 r" />
-              <button class="font-bold" @click="IncreaseQty(item)">+</button>  
-            </td>
-            <td class="py-2 px-4 border-b text-center">$ {{ (item.price * item.quantity).toFixed(2) }}</td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td colspan="4" class="py-2 px-4 pr-6 border-t text-center font-bold">Total: ${{ totalprice.toFixed(2)}}</td>         
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </template>
+        <tr>
+          <td colspan="4">
+            <div class="flex justify-end px-4 "> 
+              <button class="bg-gray-800 text-white p-2 rounded-md text-sm md:text-base" @click="handleCheckout">Checkout Now</button>
+            </div>
+          </td> 
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
 
 <style scoped>
 
