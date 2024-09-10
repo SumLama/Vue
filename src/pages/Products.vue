@@ -27,7 +27,7 @@ onMounted(() => {
     <div v-if="loading" class="text-center text-2xl">
         <h1>Loading....</h1>
     </div>
-    <div v-else class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 justify-items-center gap-5 m-8 font-serif text-lg cursor-pointer">
+    <div v-else class="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-6 justify-items-center gap-5 m-8 font-serif text-lg cursor-pointer">
         <div v-for="product in products" :key="product.id" >
             <ul>
                 <router-link :to="{ name: 'ProductDetails', params: { id: product.id } }">
