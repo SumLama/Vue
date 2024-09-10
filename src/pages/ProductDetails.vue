@@ -47,25 +47,32 @@ const DecreaseQty= ()=>{
 }
 
 const cartstore = cartStore();
-const cartItem = cartStore.items;
+
 const addToCart = ()=>{
     if(product.value){
-        const item=({
-        id:product.value.id,
-        image:product.value.image,
-        title:product.value.title,
-        price:product.value.price,
-        quantity :quantity.value
+        const existingItem = cartstore.items.find((i)=>i.id ==product.value.id)
+        if (existingItem){
+            existingItem.quantity +=quantity.value
+            alert(existingItem.quantity)
+        }
+        else{
 
-    })
-
-    cartstore.addItem(item);
+            const newItem=({
+            id:product.value.id,
+            image:product.value.image,
+            title:product.value.title,
+            price:product.value.price,
+            quantity :quantity.value
+            })
+            cartstore.addItem(newItem);
     alert("Added to cart");
+        }
+    
     }
 }
 
 </script>
-<template>r
+<template>
 
     <div v-if="loading" class="text-center text-2xl ">
         <h1>Loading.............</h1>
