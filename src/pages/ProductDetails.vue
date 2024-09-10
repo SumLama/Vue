@@ -50,27 +50,18 @@ const cartstore = cartStore();
 
 const addToCart = ()=>{
     if(product.value){
-        const existingItem = cartstore.items.find((i)=>i.id ==product.value.id)
-        if (existingItem){
-            existingItem.quantity +=quantity.value
-            alert(existingItem.quantity)
+        const newItem={
+        id:product.value.id,
+        image:product.value.image,
+        title:product.value.title,
+        price:product.value.price,
+        quantity :quantity.value
         }
-        else{
-
-            const newItem=({
-            id:product.value.id,
-            image:product.value.image,
-            title:product.value.title,
-            price:product.value.price,
-            quantity :quantity.value
-            })
-            cartstore.addItem(newItem);
+    cartstore.addItem(newItem);
     alert("Added to cart");
-        }
-    
     }
-}
 
+}
 </script>
 <template>
 
@@ -111,9 +102,9 @@ const addToCart = ()=>{
                 </li>
 
                 <li class="my-3">
-                    <button class="bg-gray-800 text-white p-2 rounded-md w-2/4 text-xl" @click="addToCart">Add to cart</button>
+                    <button class="bg-gray-800 text-white p-2 rounded-md w-2/4 text-lg" @click="addToCart">Add to cart</button>
                 </li>
-                <li class="text-lg border-t mt-2 pt-2">
+                <li class="text-base border-t mt-2 pt-2">
                     <label>Description</label>
                   <h1>{{ product.description }}</h1>  
                 </li>
