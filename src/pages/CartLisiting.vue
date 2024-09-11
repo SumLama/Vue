@@ -2,15 +2,14 @@
 import { cartStore } from '@/stores/cartStores';
 import { onMounted, ref,watch } from 'vue';
 const cart= cartStore()
-const totalprice = ref(cart.totalPrice)
+//  const totalprice = ref(cart.totalPrice)
+// const CalculatePrice = () =>{
+//  totalprice.value =  Object.values(cart.items).reduce((total,item)=> total+ item.price*item.quantity,0)
+// }
 
-const CalculatePrice = () =>{
- totalprice.value =  Object.values(cart.items).reduce((total,item)=> total+ item.price*item.quantity,0)
-}
-
-watch(cart.items,(newItem,oldItem)=>{
-  CalculatePrice()
-},{deep:true})
+// watch(cart.items,(newItem,oldItem)=>{
+//   CalculatePrice()
+// },{deep:true})
 
 const IncreaseQty= (item)=>{
   item.quantity++ 
@@ -23,6 +22,7 @@ const DecreaseQty= (item)=>{
 
 const handleCheckout = ()=>{
   alert("Proceeding to checkout")
+  
 }
 </script>
 <template>
@@ -53,15 +53,18 @@ const handleCheckout = ()=>{
         </tr>
         <tr>
           <td colspan="4">
-            <div class="text-right py-5 px-4  font-bold">Total: $ {{ totalprice.toFixed(2)}}</div> 
+            <div class="text-right my-5 mr-10   font-bold">Total: $ {{ cart.totalPrice.toFixed(2)}}</div> 
           </td>
-          </tr>
-        <tr>
-          <td colspan="4">
-            <div class="flex justify-end px-4 "> 
-              <button class="bg-gray-800 text-white p-2 rounded-md text-sm md:text-base" @click="handleCheckout">Checkout Now</button>
+        
+         
+          <td colspan="5">
+            <div class="flex justify-center"> 
+             <router-link to="/checkout">
+              <button class="bg-gray-800 text-white p-2 my-5 rounded-md text-sm md:text-base" @click="handleCheckout">Checkout Now</button>
+            </router-link>
             </div>
           </td> 
+       
         </tr>
       </tbody>
     </table>
